@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+pipenv/
+Pipfile
+Pipfile.lock
+
+# Environment variables
+.env
+.env.*
+
+# Alembic migrations
+alembic.ini
+migrations
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+*.log
+*.sqlite3
+*.db
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Test coverage reports
+.coverage
+htmlcov/
+
+# SSL / Keys
+*.pem
+*.crt
+*.key
