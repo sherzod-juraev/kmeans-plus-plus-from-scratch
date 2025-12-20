@@ -49,7 +49,7 @@ async def data_upload_json(
     '/predict',
     summary='Kmeans predict',
     status_code=status.HTTP_200_OK,
-    response_model=KmeansOut
+    response_model=KmeansOutPredict
 )
 async def predict_kmeans(
         data: DataUploadJSON
@@ -58,7 +58,7 @@ async def predict_kmeans(
     X = kmeans_model.pca.transform(X)
     kmeans_scheme = KmeansOutPredict(
         centroids=kmeans_model.centroids.tolist(),
-        X=X,
-        labels=kmeans_model.predict(data.X)
+        X=X.tolist(),
+        labels=kmeans_model.predict(data.X).tolist()
     )
     return kmeans_scheme
