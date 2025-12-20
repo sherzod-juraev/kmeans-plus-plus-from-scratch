@@ -6,6 +6,7 @@ from scipy.spatial.distance import cdist
 from fastapi import HTTPException
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.decomposition import PCA
+from kmeans.visualization import plot_clusters
 
 
 class Kmeans:
@@ -144,7 +145,7 @@ class Kmeans:
         else:
             self.normalization = MinMaxScaler()
         X = self.normalization.fit_transform(X)
-        self.pca = PCA(n_components=self.pca_n_components)
+        self.pca = PCA(n_components=self.pca_n_components, random_state=self.random_state)
         X = self.pca.fit_transform(X)
         self.__initialize_centroids(X)
         for i in range(self.max_iter):

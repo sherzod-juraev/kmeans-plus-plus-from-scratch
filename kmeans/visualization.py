@@ -1,25 +1,25 @@
 import matplotlib.pyplot as plt
 from numpy import ndarray
+from sklearn.decomposition import PCA
 
 
 def plot_clusters(
         X: ndarray,
         centroids: ndarray,
+        pca_mdoel : PCA,
+        normalization_model,
         title: str = 'Kmeans'
 ):
-    n_clusters = centroids.shape[0]
-    for i in range(n_clusters):
-        plt.scatter(X[:, 0],
-                    X[:, 1],
-                    label=f'Cluster {i}',
-                    marker='s',
-                    markersize=5)
+
+    X_nor = normalization_model.transform(X)
+    X = pca_mdoel.transform(X_nor)
+    print(X)
+    plt.scatter(X[:, 0],
+                X[:, 1],
+                marker='s')
     plt.scatter(centroids[:, 0], centroids[:, 1],
                 marker='x',
-                markersize=5,
-                color='black',
-                label='Centroids')
+                color='black')
     plt.title(title)
-    plt.legend('lower right')
     plt.grid()
     plt.show()
