@@ -1,9 +1,11 @@
 from .kmeans_pp import KmeansPP
-from kmeans.options import KmeansInitOptions
+from .options import NormalizationOptions, KmeansInitOptions
 from numpy import ndarray, allclose
 from numpy.random import default_rng
 from scipy.spatial.distance import cdist
 from fastapi import HTTPException
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.decomposition import PCA
 
 
 class Kmeans:
@@ -37,6 +39,8 @@ class Kmeans:
                  tol: float = 1e-4,
                  init: KmeansInitOptions = KmeansInitOptions.KMEANS_PP,
                  random_state: int | None = None,
+                 pca_n_components: int = 2,
+                 normalization: NormalizationOptions = NormalizationOptions.Z_SCORE,
                  /):
 
         self.n_clusters = n_clusters
@@ -46,6 +50,8 @@ class Kmeans:
         self.centroids = None
         self.random_state = random_state
         self.labels_ = None
+        self.pca = PCA(n_components=pca_n_components)
+        self.normalization = normalization
 
     def __initialize_centroids(self, X: ndarray, /):
         """
@@ -133,7 +139,12 @@ class Kmeans:
         - Runs up to `self.max_iter` iterations.
         - After fitting, `self.labels_` contains cluster labels.
         """
-
+        if self.normalization == NormalizationOptions.Z_SCORE:
+            self.normalization = StandardScaler()
+        else:
+            self.normalization = MinMaxScaler()
+        X = self.normalization.fit_transform(X)
+        X = self.pca.fit_transform(X)
         self.__initialize_centroids(X)
         for i in range(self.max_iter):
             self.labels_ = self.__calculate_distance(X)
@@ -168,5 +179,7 @@ class Kmeans:
                 status_code=400,
                 detail="Model is not fitted yet. Call `fit` first."
             )
+        X = self.normalization.transform(X)
+        X = self.pca.transform(X)
         cluster_labels = self.__calculate_distance(X)
         return cluster_labels
