@@ -37,3 +37,15 @@ async def data_upload_json(
 ):
     kmeans_model.fit(data.X)
 
+
+@api_router.post(
+    '/predict',
+    summary='Kmeans predict',
+    status_code=status.HTTP_200_OK,
+    response_model=list
+)
+async def predict_kmeans(
+        data: DataUploadJSON
+):
+    labels = kmeans_model.predict(data.X)
+    return labels.tolist()

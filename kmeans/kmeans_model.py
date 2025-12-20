@@ -50,7 +50,7 @@ class Kmeans:
         self.centroids = None
         self.random_state = random_state
         self.labels_ = None
-        self.pca = PCA(n_components=pca_n_components)
+        self.pca_n_components = pca_n_components
         self.normalization = normalization
 
     def __initialize_centroids(self, X: ndarray, /):
@@ -144,6 +144,7 @@ class Kmeans:
         else:
             self.normalization = MinMaxScaler()
         X = self.normalization.fit_transform(X)
+        self.pca = PCA(n_components=self.pca_n_components)
         X = self.pca.fit_transform(X)
         self.__initialize_centroids(X)
         for i in range(self.max_iter):
