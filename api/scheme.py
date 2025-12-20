@@ -1,5 +1,6 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field
 from fastapi import HTTPException, status
+from kmeans.options import NormalizationOptions, KmeansInitOptions
 import numpy as np
 
 
@@ -8,28 +9,13 @@ class KmeansOptions(BaseModel):
         'extra': 'forbid'
     }
 
-    n_clusters: int = 3
-    max_iter: int = 100
-
-
-    @field_validator('n_clusters')
-    def verify_n_clusters(cls, value):
-        if value < 2:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-                detail='n_cluster must be 2 or greater'
-            )
-        return value
-
-
-    @field_validator('max_iter')
-    def verify_max_iter(cls, value):
-        if value <= 0:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-                detail='max_iter cannot be < 0. Enter a positive integer for max_iter.'
-            )
-        return value
+    n_clusters: int = Field(2, ge=2)
+    max_iter: int = Field(100, ge=0)
+    tol: float = Field(1e-4, ge=0, lt=1e-1)
+    init: KmeansInitOptions = KmeansInitOptions.KMEANS_PP
+    random_state: int | None = None
+    pca_n_components: int = Field(2, ge=2)
+    normalization: NormalizationOptions = NormalizationOptions.Z_SCORE
 
 
 class DataUploadJSON(BaseModel):
