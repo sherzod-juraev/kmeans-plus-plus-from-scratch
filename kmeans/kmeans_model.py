@@ -6,7 +6,6 @@ from scipy.spatial.distance import cdist
 from fastapi import HTTPException
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.decomposition import PCA
-from kmeans.visualization import plot_clusters
 
 
 class Kmeans:

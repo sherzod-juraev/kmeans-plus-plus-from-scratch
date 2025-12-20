@@ -38,3 +38,22 @@ class DataUploadJSON(BaseModel):
         indx = np.where(np.isnan(value))
         value[indx] = np.take(col_mean, indx[1])
         return value
+
+
+class KmeansOut(BaseModel):
+    model_config = {
+        'from_attributes': True
+    }
+
+    centroids: list[list]
+    X: list[list]
+
+
+class KmeansOutPredict(BaseModel):
+    model_config = {
+        'extra': 'forbid'
+    }
+
+    centroids: list[list]
+    X: list[list]
+    labels: list

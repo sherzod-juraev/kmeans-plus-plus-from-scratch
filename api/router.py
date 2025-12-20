@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status
-from .scheme import KmeansOptions, DataUploadJSON
+from .scheme import KmeansOptions, DataUploadJSON, KmeansOut, KmeansOutPredict
 from kmeans import Kmeans
 
 
@@ -30,22 +30,35 @@ async def set_options(
     '/data-upload-json',
     summary='Load json data for kmeans',
     status_code=status.HTTP_200_OK,
-    response_model=None
+    response_model=KmeansOut
 )
 async def data_upload_json(
         data: DataUploadJSON
 ):
     kmeans_model.fit(data.X)
+    X = kmeans_model.normalization.transform(data.X)
+    X = kmeans_model.pca.transform(X)
+    kmeans_scheme = KmeansOut(
+        centroids=kmeans_model.centroids.tolist(),
+        X=X
+    )
+    return kmeans_scheme
 
 
 @api_router.post(
     '/predict',
     summary='Kmeans predict',
     status_code=status.HTTP_200_OK,
-    response_model=list
+    response_model=KmeansOut
 )
 async def predict_kmeans(
         data: DataUploadJSON
 ):
-    labels = kmeans_model.predict(data.X)
-    return labels.tolist()
+    X = kmeans_model.normalization.transform(data.X)
+    X = kmeans_model.pca.transform(X)
+    kmeans_scheme = KmeansOutPredict(
+        centroids=kmeans_model.centroids.tolist(),
+        X=X,
+        labels=kmeans_model.predict(data.X)
+    )
+    return kmeans_scheme
