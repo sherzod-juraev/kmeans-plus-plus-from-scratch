@@ -15,7 +15,7 @@ def validate_username(value: str, /) -> str:
 
 
 def validate_password(value: str, /) -> str:
-    pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,25}$'
+    pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,25}$'
     if not match(pattern, value):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
