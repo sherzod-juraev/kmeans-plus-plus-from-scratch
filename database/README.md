@@ -7,8 +7,6 @@ database connections and session
 management for all CRUD and ORM
 operations.
 
----
-
 ## File Descriptions
 
 ### `__init__.py`
@@ -22,8 +20,6 @@ operations.
 ### `session.py`
 - Provides the `get_db` dependency for FastAPI routes.
 - Automatically handles session rollback on exceptions and ensures session closure.
-
----
 
 ## Usage
 ```python
