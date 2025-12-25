@@ -4,7 +4,7 @@ from core import setting
 
 
 async_engine = create_async_engine(
-    url=setting.databse_url,
+    url=setting.database_url,
     pool_size=40,
     max_overflow=60,
     pool_recycle=1800,

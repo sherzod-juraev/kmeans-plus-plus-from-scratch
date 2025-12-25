@@ -4,8 +4,4 @@ from api import api_router
 
 app = FastAPI()
 
-app.include_router(
-    api_router,
-    prefix='/kmeans',
-    tags=['Kmeans']
-)
+app.include_router(api_router)

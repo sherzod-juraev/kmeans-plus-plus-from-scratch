@@ -105,3 +105,23 @@ class UserRead(BaseModel):
     id: UUID
     username: str
     full_name: str | None = None
+
+
+class UserDelete(BaseModel):
+    model_config = {
+        'extra': 'forbid'
+    }
+
+
+    username: str
+    password: str
+
+
+    @field_validator('username')
+    def verify_username(cls, value):
+        return validate_username(value)
+
+
+    @field_validator('password')
+    def verify_password(cls, value):
+        return validate_password(value)
