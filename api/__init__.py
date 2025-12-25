@@ -7,9 +7,13 @@ from .users.router import user_router
 
 # import models
 from .users import User
+from .chats import Chat
 
 
-__all__ = ['User']
+__all__ = [
+    'User',
+    'Chat'
+]
 
 
 api_router = APIRouter()
