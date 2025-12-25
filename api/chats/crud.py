@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select
 from fastapi import HTTPException, status
 from uuid import UUID
 from . import Chat, ChatCreate, ChatUpdateFull, ChatUpdatePartial
@@ -56,6 +57,26 @@ async def read_chat(
             detail='Chat not found'
         )
     return chat_model
+
+
+async def get_chats(
+        db: AsyncSession,
+        user_id: UUID,
+        skip: int, limit: int,
+        /
+) -> list[Chat]:
+    query = select(
+        Chat).where(
+        Chat.user_id == user_id).order_by(
+        Chat.created_at.desc()).offset(skip).limit(limit)
+    result = await db.execute(query)
+    chats = result.scalars().all()
+    if len(chats) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Chat not found'
+        )
+    return chats
 
 
 async def update_chat(
