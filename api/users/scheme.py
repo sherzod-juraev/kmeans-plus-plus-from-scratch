@@ -125,3 +125,12 @@ class UserDelete(BaseModel):
     @field_validator('password')
     def verify_password(cls, value):
         return validate_password(value)
+
+
+class TokenResponse(BaseModel):
+    model_config = {
+        'extra': 'forbid'
+    }
+
+    access_token: str
+    token_type: str = 'bearer'

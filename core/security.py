@@ -68,7 +68,7 @@ def verify_access_token(access_token: Annotated[str, Depends(oauth2_scheme)]) ->
 
 
 def verify_refresh_token(refresh_token: str | None, /) -> UUID:
-    if not refresh_token:
+    if refresh_token is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='refresh_token not found'
