@@ -2,6 +2,17 @@
 
 This module handles user management including signup, authentication, updating, reading, and deleting users.
 
+## Table of Contents
+
+- [Endpoints](#endpoints)
+- - [Signup](#1-signup)
+- - [Refresh token](#2-refresh-token)
+- - [Get user](#3-get-user)
+- - [Full update user](#4-full-update-user)
+- - [Partial update user](#5-partial-update-user)
+- - [Delete user](#6-delete-user)
+- [Model / Schemas](#models--schemas)
+
 ## Endpoints
 
 ### 1. **Signup**
