@@ -22,3 +22,12 @@ class Chat(Base):
         back_populates='chats',
         lazy='noload'
     )
+
+
+    kmeans_datas: Mapped['KmeansData'] = relationship(
+        'KmeansData',
+        back_populates='chat',
+        foreign_keys='KmeansData.chat_id',
+        passive_deletes=True,
+        lazy='noload'
+    )

@@ -9,11 +9,14 @@ from .chats.router import chat_router
 # import models
 from .users import User
 from .chats import Chat
+from .kmeans import KmeansData, KmeansCentroid
 
 
 __all__ = [
     'User',
-    'Chat'
+    'Chat',
+    'KmeansData',
+    'KmeansCentroid'
 ]
 
 
