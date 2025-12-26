@@ -12,8 +12,6 @@ class KmeansData(Base):
 
     id: Mapped[UUID] = mapped_column(db_uuid(as_uuid=True), primary_key=True, default=uuid4)
     n_clusters: Mapped[int] = mapped_column(Integer, nullable=False)
-    fit_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    fit_time: Mapped[float] = mapped_column(Float, nullable=False)
     preprocessing: Mapped[dict] = mapped_column(JSONB, nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     chat_id: Mapped[UUID] = mapped_column(db_uuid(as_uuid=True), ForeignKey('chats.id', ondelete='CASCADE'), nullable=False)
@@ -41,6 +39,8 @@ class KmeansCentroid(Base):
 
     id: Mapped[UUID] = mapped_column(db_uuid(as_uuid=True), primary_key=True, default=uuid4)
     values: Mapped[list[list[float]]] = mapped_column(ARRAY(Float), nullable=False)
+    fit_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    fit_time: Mapped[float] = mapped_column(Float, nullable=False)
     kmeans_data_id: Mapped[UUID] = mapped_column(db_uuid(as_uuid=True), ForeignKey('kmeans_data.id', ondelete='CASCADE'), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
