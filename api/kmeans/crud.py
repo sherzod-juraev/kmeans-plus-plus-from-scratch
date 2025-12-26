@@ -131,6 +131,17 @@ async def create_kmeans_centroid(
     return kmeans_centroid_model
 
 
+async def read_kmeans_datas(
+        db: AsyncSession,
+        skip: int, limit: int,
+        /
+) -> list[KmeansData]:
+    query = select(KmeansData).order_by(KmeansData.created_at.desc()).offset(skip).limit(limit)
+    result = await db.execute(query)
+    kmeans_datas_list = result.scalars().all()
+    return kmeans_datas_list
+
+
 async def read_kmeans_data(
         db: AsyncSession,
         kmeans_data_id: UUID,

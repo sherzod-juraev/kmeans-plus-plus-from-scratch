@@ -15,7 +15,8 @@ from . import (
     KmeansDataDBCreate,
     KmeansCentroidCreate,
     KmeansFit,
-    KmeansCentroidRead
+    KmeansCentroidRead,
+    KmeansDataRead
 )
 
 
@@ -109,3 +110,18 @@ async def get_kmeans_centroids(
 ):
     kmeans_centroids_list = await crud.read_kmeans_centroids(db, kmeans_data_id, skip, limit)
     return kmeans_centroids_list
+
+
+@kmeans_router.get(
+    '/',
+    summary='Get kmeans datas',
+    status_code=status.HTTP_200_OK,
+    response_model=list[KmeansDataRead]
+)
+async def get_kmeans_datas(
+        db: Annotated[AsyncSession, Depends(get_db)],
+        skip: int = 0,
+        limit: int = 10
+):
+    kmeans_datas_list = await crud.read_kmeans_datas(db, skip, limit)
+    return kmeans_datas_list

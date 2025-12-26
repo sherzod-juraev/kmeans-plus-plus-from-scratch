@@ -15,6 +15,7 @@ class KmeansData(Base):
     preprocessing: Mapped[dict] = mapped_column(JSONB, nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     chat_id: Mapped[UUID] = mapped_column(db_uuid(as_uuid=True), ForeignKey('chats.id', ondelete='CASCADE'), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
     chat: Mapped['Chat'] = relationship(
