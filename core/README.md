@@ -6,6 +6,18 @@ exception handling for the FastAPI project.
 It centralizes settings, token management,
 password hashing, and custom exception handlers.
 
+## Table of Contents
+
+- [File descriptions](#file-descriptions)
+  - [__init__.py](#__init__py)
+  - [config.py](#configpy)
+  - [exception.py](#exceptionpy)
+  - [security.py](#securitypy)
+- [Usage examples](#usage-examples)
+  - [Dependency Injection for FastAPI routes](#dependency-injection-for-fastapi-routes)
+  - [Password hashing](#password-hashing)
+  - [Creating tokens](#creating-tokens)
+
 ## File Descriptions
 
 ### `__init__.py`
