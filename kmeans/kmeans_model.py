@@ -1,11 +1,7 @@
 from .kmeans_pp import KmeansPP
-from .options import NormalizationOptions, KmeansInitOptions
 from numpy import ndarray, allclose
 from numpy.random import default_rng
 from scipy.spatial.distance import cdist
-from fastapi import HTTPException
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.decomposition import PCA
 
 
 class Kmeans:
@@ -20,8 +16,8 @@ class Kmeans:
         Maximum number of iterations of the KMeans algorithm.
     tol : float
         Convergence tolerance. If the change in centroids is less than this value, algorithm stops.
-    init : KmeansInitOptions
-        Method for initialization: KMEANS_PP (KMeans++) or RANDOM (random choice of initial centroids).
+    init : str
+        Method for initialization: 'kmeans++' or 'random'
     random_state : int | None
         Seed for random number generator to ensure reproducibility.
 
@@ -37,10 +33,8 @@ class Kmeans:
                  n_clusters: int = 2,
                  max_iter: int = 100,
                  tol: float = 1e-4,
-                 init: KmeansInitOptions = KmeansInitOptions.KMEANS_PP,
+                 init: str = 'kmeans++',
                  random_state: int | None = None,
-                 pca_n_components: int = 2,
-                 normalization: NormalizationOptions = NormalizationOptions.Z_SCORE,
                  /):
 
         self.n_clusters = n_clusters
@@ -50,8 +44,6 @@ class Kmeans:
         self.centroids = None
         self.random_state = random_state
         self.labels_ = None
-        self.pca_n_components = pca_n_components
-        self.normalization = normalization
 
     def __initialize_centroids(self, X: ndarray, /):
         """
@@ -67,13 +59,15 @@ class Kmeans:
             Input data of shape (n_samples, n_features)
         """
 
-        if self.init == KmeansInitOptions.KMEANS_PP:
+        if self.init == 'kmeans++':
             self.centroids = KmeansPP(self.n_clusters, self.random_state).initialize_centroids(X)
-        else:
+        elif self.init == 'random':
             n_samples, m_features = X.shape[0], X.shape[1]
             rng = default_rng(self.random_state)
             ind = rng.choice(n_samples, size=self.n_clusters, replace=False)
             self.centroids = X[ind].copy()
+        else:
+            raise ValueError('Invalid init method')
 
     def __calculate_distance(self, X: ndarray, /) -> ndarray:
         """
@@ -119,7 +113,7 @@ class Kmeans:
             if len(centroid) > 0:
                 self.centroids[i] = centroid.mean(axis=0)
 
-    def fit(self, X: ndarray, /):
+    def fit(self, X: ndarray, /) -> 'Kmeans':
         """
         Compute KMeans clustering.
 
@@ -139,13 +133,6 @@ class Kmeans:
         - Runs up to `self.max_iter` iterations.
         - After fitting, `self.labels_` contains cluster labels.
         """
-        if self.normalization == NormalizationOptions.Z_SCORE:
-            self.normalization = StandardScaler()
-        else:
-            self.normalization = MinMaxScaler()
-        X = self.normalization.fit_transform(X)
-        self.pca = PCA(n_components=self.pca_n_components, random_state=self.random_state)
-        X = self.pca.fit_transform(X)
         self.__initialize_centroids(X)
         for i in range(self.max_iter):
             self.labels_ = self.__calculate_distance(X)
@@ -176,11 +163,6 @@ class Kmeans:
         """
 
         if self.centroids is None:
-            raise HTTPException(
-                status_code=400,
-                detail="Model is not fitted yet. Call `fit` first."
-            )
-        X = self.normalization.transform(X)
-        X = self.pca.transform(X)
+            raise ValueError("Model is not fitted yet. Call `fit` first.")
         cluster_labels = self.__calculate_distance(X)
         return cluster_labels
