@@ -3,8 +3,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from fastapi import HTTPException, status
 from uuid import UUID
-from . import KmeansData, KmeansCentroid, KmeansDataDBCreate, \
-    KmeansCentroidCreate, KmeansDataDBUpdateFull, KmeansDataDBUpdatePartial
+from . import KmeansData, KmeansCentroid, \
+    KmeansDataDBCreate, KmeansCentroidCreate
 
 
 async def persist_kmeans_data(
@@ -105,7 +105,7 @@ async def create_kmeans_data(
         /
 ) -> KmeansData:
     kmeans_data_model = KmeansData(
-        n_cluster=kmeans_data_scheme.n_cluster,
+        n_clusters=kmeans_data_scheme.n_clusters,
         preprocessing=kmeans_data_scheme.preprocessing,
         description=kmeans_data_scheme.description,
         chat_id=kmeans_data_scheme.chat_id
@@ -157,20 +157,6 @@ async def read_kmeans_centroids(
     result = await db.execute(query)
     kmeans_centroid_list = result.scalars().all()
     return kmeans_centroid_list
-
-
-async def update_kmeans_data(
-        db: AsyncSession,
-        kmeans_data_id: UUID,
-        kmeans_data_scheme: KmeansDataDBUpdateFull | KmeansDataDBUpdatePartial,
-        /, *,
-        exclude_unset: bool = False
-) -> KmeansData:
-    kmeans_data_model = await read_kmeans_data(db, kmeans_data_id)
-    for field, value in kmeans_data_scheme.model_dump(exclude_unset=exclude_unset).items():
-        setattr(kmeans_data_model, field, value)
-    kmeans_data_model = await save_kmeans_data(db, kmeans_data_model)
-    return kmeans_data_model
 
 
 async def delete_kmeans_data(

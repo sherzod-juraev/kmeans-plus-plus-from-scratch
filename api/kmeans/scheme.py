@@ -39,28 +39,6 @@ class KmeansDataCreate(BaseModel):
     chat_id: UUID
 
 
-class KmeansDataUpdateFull(BaseModel):
-    model_config = {
-        'extra': 'forbid'
-    }
-
-    kmeans: KmeansScheme
-    normalization: Normalization | None
-    pca: PCAInit | None
-    description: str
-
-
-class KmeansDataUpdatePartial(BaseModel):
-    model_config = {
-        'extra': 'forbid'
-    }
-
-    kmeans: KmeansScheme | None = None
-    normalization: Normalization | None = None
-    pca: PCAInit | None = None
-    description: str | None = None
-
-
 class KmeansDataRead(BaseModel):
     model_config = {
         'from_attributes': True
@@ -77,32 +55,10 @@ class KmeansDataDBCreate(BaseModel):
         'extra': 'forbid'
     }
 
-    n_cluster: int
+    n_clusters: int
     preprocessing: dict
     description: str | None = None
     chat_id: UUID
-
-
-class KmeansDataDBUpdateFull(BaseModel):
-    model_config = {
-        'extra': 'forbid'
-    }
-
-    n_cluster: int
-    preprocessing: dict
-    description: str
-    chat_id: UUID
-
-
-class KmeansDataDBUpdatePartial(BaseModel):
-    model_config = {
-        'extra': 'forbid'
-    }
-
-    n_cluster: int | None = None
-    preprocessing: dict | None = None
-    description: str | None = None
-    chat_id: UUID | None = None
 
 
 class KmeansCentroidCreate(BaseModel):
@@ -133,7 +89,6 @@ class KmeansFit(BaseModel):
     }
 
     X: list[list[float | None]]
-    kmeans_data_id: UUID
 
 
     @field_validator('X')

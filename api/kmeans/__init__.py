@@ -1,5 +1,4 @@
 from .model import KmeansData, KmeansCentroid
-from .scheme import KmeansDataCreate, KmeansDataUpdateFull, \
-    KmeansDataUpdatePartial, KmeansDataRead, \
-    KmeansDataDBCreate, KmeansDataDBUpdateFull, KmeansDataDBUpdatePartial, \
-    KmeansCentroidCreate, KmeansFit
+from .scheme import KmeansDataCreate, \
+    KmeansDataRead, KmeansDataDBCreate, \
+    KmeansCentroidCreate, KmeansFit, KmeansCentroidRead
