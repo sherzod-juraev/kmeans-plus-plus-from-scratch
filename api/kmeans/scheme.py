@@ -11,7 +11,7 @@ class PCAInit(BaseModel):
         'extra': 'forbid'
     }
 
-    n_components: int = 2
+    n_components: int = Field(2, gt=0)
     random_state: int | None = 1
 
 
@@ -20,7 +20,7 @@ class KmeansScheme(BaseModel):
         'extra': 'forbid'
     }
 
-    n_clusters: int
+    n_clusters: int = Field(gt=0)
     max_iter: int = 100
     tol: float = Field(1e-4, gt=0, lt=1)
     init: KmeansInit = KmeansInit.kmeans_pp
@@ -70,6 +70,39 @@ class KmeansDataRead(BaseModel):
     n_clusters: int
     preprocessing: dict
     description: str | None = None
+
+
+class KmeansDataDBCreate(BaseModel):
+    model_config = {
+        'extra': 'forbid'
+    }
+
+    n_cluster: int
+    preprocessing: dict
+    description: str | None = None
+    chat_id: UUID
+
+
+class KmeansDataDBUpdateFull(BaseModel):
+    model_config = {
+        'extra': 'forbid'
+    }
+
+    n_cluster: int
+    preprocessing: dict
+    description: str
+    chat_id: UUID
+
+
+class KmeansDataDBUpdatePartial(BaseModel):
+    model_config = {
+        'extra': 'forbid'
+    }
+
+    n_cluster: int | None = None
+    preprocessing: dict | None = None
+    description: str | None = None
+    chat_id: UUID | None = None
 
 
 class KmeansCentroidCreate(BaseModel):
