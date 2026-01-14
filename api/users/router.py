@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from uuid import UUID
 from database import get_db
 from core import create_refresh_token as crt, \
-    create_access_token as cat, setting, \
+    create_access_token as cat, get_setting, \
     verify_refresh_token as vrt, verify_access_token as vat
 from . import crud, UserCreate, UserRead, \
     UserUpdateFull, UserUpdatePartial, UserDelete, \
@@ -13,6 +13,7 @@ from . import crud, UserCreate, UserRead, \
 
 
 user_router = APIRouter()
+settings = get_setting()
 
 
 @user_router.post(
@@ -34,7 +35,7 @@ async def create_user(
     response.set_cookie(
         key='refresh_token',
         value=crt(user_model.id),
-        max_age=60 * 60 * 24 * setting.refresh_token_days,
+        max_age=60 * 60 * 24 * settings.refresh_token_days,
         expires=datetime.now(timezone.utc) + timedelta(days=setting.refresh_token_days),
         httponly=True
     )
@@ -59,7 +60,7 @@ async def update_access_token(
     response.set_cookie(
         key='refresh_token',
         value=crt(user_id),
-        max_age=60 * 60 * 24 * setting.refresh_token_days,
+        max_age=60 * 60 * 24 * settinsg.refresh_token_days,
         expires=datetime.now(timezone.utc) + timedelta(days=setting.refresh_token_days),
         httponly=True
     )

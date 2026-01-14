@@ -1,10 +1,12 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-from core import setting
+from core import get_setting
+
+settings = get_setting()
 
 
 async_engine = create_async_engine(
-    url=setting.database_url,
+    url=settings.database_url,
     pool_size=40,
     max_overflow=60,
     pool_recycle=1800,
