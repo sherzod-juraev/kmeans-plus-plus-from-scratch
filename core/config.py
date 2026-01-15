@@ -10,10 +10,15 @@ class Setting(BaseSettings):
     secret_key: str
     algorithm: str
     redis_url: str
+    rl_key: str
     rate_limit: int
     rate_period: int
-    global_rate_limit: int
-    global_rate_period: int
+    g_key: str
+    gr_limit: int
+    gr_period: int
+    cb_key: str
+    cb_limit: int
+    cb_period: int
 
     class Config:
         env_file = '.env'

@@ -10,9 +10,14 @@ from core import create_refresh_token as crt, \
 from . import crud, UserCreate, UserRead, \
     UserUpdateFull, UserUpdatePartial, UserDelete, \
     TokenResponse
+from core.async_redis import rate_limit
 
 
-user_router = APIRouter()
+user_router = APIRouter(
+    dependencies=[
+        Depends(rate_limit)
+    ]
+)
 settings = get_setting()
 
 
@@ -36,7 +41,7 @@ async def create_user(
         key='refresh_token',
         value=crt(user_model.id),
         max_age=60 * 60 * 24 * settings.refresh_token_days,
-        expires=datetime.now(timezone.utc) + timedelta(days=setting.refresh_token_days),
+        expires=datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_days),
         httponly=True
     )
     token = TokenResponse(
@@ -60,8 +65,8 @@ async def update_access_token(
     response.set_cookie(
         key='refresh_token',
         value=crt(user_id),
-        max_age=60 * 60 * 24 * settinsg.refresh_token_days,
-        expires=datetime.now(timezone.utc) + timedelta(days=setting.refresh_token_days),
+        max_age=60 * 60 * 24 * settings.refresh_token_days,
+        expires=datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_days),
         httponly=True
     )
     token = TokenResponse(

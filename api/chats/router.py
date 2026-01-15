@@ -5,9 +5,14 @@ from core import verify_access_token as vat
 from database import get_db
 from . import crud, ChatCreate, ChatUpdateFull, \
     ChatUpdatePartial, ChatRead
+from core.async_redis import rate_limit
 
 
-chat_router = APIRouter()
+chat_router = APIRouter(
+    dependencies=[
+        Depends(rate_limit)
+    ]
+)
 
 
 @chat_router.post(

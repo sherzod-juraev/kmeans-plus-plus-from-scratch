@@ -18,9 +18,14 @@ from . import (
     KmeansCentroidRead,
     KmeansDataRead
 )
+from core.async_redis import rate_limit
 
 
-kmeans_router = APIRouter()
+kmeans_router = APIRouter(
+    dependencies=[
+        Depends(rate_limit)
+    ]
+)
 
 
 async def kmeans_fit_background(
