@@ -29,6 +29,7 @@ migrations
 Thumbs.db
 
 # Logs and caches
+logs
 *.log
 *.sqlite3
 *.db

@@ -113,10 +113,9 @@ async def partial_update_user(
 async def delete_user(
         response: Response,
         user_id: Annotated[UUID, Depends(vat)],
-        user_scheme: UserDelete,
         db=Depends(get_db)
 ):
-    await crud.delete_user(db, user_id, user_scheme)
+    await crud.delete_user(db, user_id)
     response.delete_cookie('refresh_token')
 
 

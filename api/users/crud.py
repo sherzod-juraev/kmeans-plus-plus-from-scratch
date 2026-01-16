@@ -75,11 +75,9 @@ async def update_user(
 async def delete_user(
         db: AsyncSession,
         user_id: UUID,
-        user_scheme: UserDelete,
         /
 ) -> None:
     user_model = await user_read(db, user_id)
-    await verify_fields(user_scheme, user_model)
     await db.delete(user_model)
     try:
         await db.commit()
@@ -88,23 +86,4 @@ async def delete_user(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Error deleting user'
-        )
-
-
-async def verify_fields(
-        user_scheme: UserDelete,
-        user_model: User,
-        /
-) -> None:
-    username = user_model.username == user_scheme.username
-    if not username:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Username is wrong'
-        )
-    password = verify_pass(user_scheme.password, user_model.password)
-    if not password:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Password is wrong'
         )
